@@ -1,0 +1,49 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Nov 28 13:52:16 2018
+
+@author: Lshan
+"""
+
+#导入库
+import requests
+import os
+
+# 设置代理
+user_agent = """Mozilla/5.0 """
+kv = {'User-Agent': user_agent}
+# 设置URL
+url_0 = 'http://img.ivsky.com/img/bizhi/pre/201802/04/slender_west_lake-00'
+num_list = range(1,9)
+# 定义文件放置的位置
+root = "O://picters//"
+
+# 通过for循环，定义每一个url和存储的文件路径
+for num in num_list:
+    url = url_0 + str(num) + ".jpg"
+    path = root + url.split("/")[-1]
+    # 利用try...except...处理异常
+    try:
+#        如果没有跟目录，就创建一个文件夹
+        if not os.path.exists(root):
+            os.mkdir(root)
+#          如果文件路径不存在，就进行页面访问请求  
+        if not os.path.exists(path):
+#            利用get方法，提交请求
+            r = requests.get(url, headers=kv)
+#            在方法内部，判断请求返回状态码是否为200，如果不是，则产生异常
+            r.raise_for_status()
+#            编码方式
+            r.encoding = r.apparent_encoding
+#            利用content属性，响应内容的二进制数据，赋值给data变量
+            data = r.content
+#            打开path路径下的文件，以二进制形式，写入变量data，关闭文件，打印url
+            with open(path, "wb") as f:
+                f.write(data)
+                f.close()
+                print(url, "——保存成功")
+        else:
+            print("文件已存在")
+
+    except:
+        print("爬取失败")
