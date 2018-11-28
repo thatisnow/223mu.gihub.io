@@ -1,0 +1,21 @@
+#导入requests库
+import requests
+
+url = "https://www.mi.com/mi8/"
+try:
+    #模拟浏览器进行访问
+    kv = {'User-Agent': 'Mozilla/5.0'}
+    r = requests.get(url, headers=kv)
+    r.raise_for_status()
+    r.encoding = r.apparent_encoding
+    data = r.text[:10000].encode('utf-8')
+    #在当前目录下打开一个名为“test.txt的文件，赋值给f，以byte格式执行写模式
+    #wb模式：以二进制格式打开一个文件用于写入
+    f = open("小米8.txt", "wb")
+    #将data写入f文件
+    f.write(data)
+    #关闭文件f
+    f.close()
+    print("爬取成功")
+except:
+    print("爬取失败")
